@@ -80,7 +80,7 @@ func getLevelString(level LOGGERLEVELTYPE) (string, error) {
 }
 
 func getFuncInfo() (fileName, funcName string, funcLineNo LOGGERLEVELTYPE) {
-	pc, file, line, ok := runtime.Caller(4)
+	pc, file, line, ok := runtime.Caller(5)
 	if ok {
 		fileName = path.Base(file)
 		funcName = path.Base(runtime.FuncForPC(pc).Name())

@@ -26,7 +26,7 @@ func newFileLogger(fileName, filePath string) *fileLogger {
 	obj := new(fileLogger)
 	obj.fileName = fileName
 	obj.filePath = path.Join(filePath, time.Now().Format("20060102"))
-	obj.fileSize = 1 * 1024
+	obj.fileSize = LOG_FILE_MAX * 1024
 	obj.logChanMsg = make(chan *logMsg, 10000)
 	obj.logMsg = newLogMsg()
 	obj.Init()
@@ -71,7 +71,7 @@ func (f *fileLogger) splitFileLog(fileInfo, errorInfo string) {
 		f.fileInfo = f.rename(f.fileInfo, fileInfo)
 	}
 	if f.isCheckSize(f.errorInfo) {
-		f.errorInfo = f.rename(f.fileInfo, errorInfo)
+		f.errorInfo = f.rename(f.errorInfo, errorInfo)
 	}
 }
 
@@ -82,7 +82,6 @@ func (f *fileLogger) isCheckSize(file *os.File) bool {
 		logs.Fatalf("isCheckSize: %s", err)
 		return false
 	}
-	fmt.Println(fileInfo.Size())
 	return fileInfo.Size() >= f.fileSize
 }
 

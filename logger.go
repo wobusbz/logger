@@ -1,10 +1,9 @@
 package logger
 
-import "log"
-
 var (
-	Log          LoggerImpl
+	log          LoggerImpl
 	DEFAULTLEVEL LOGGERLEVELTYPE = 0
+	LOG_FILE_MAX int64           = 10
 )
 
 type Logger struct {
@@ -15,9 +14,10 @@ type Logger struct {
 
 func NewLogger(fileName, filePath string, b bool) {
 	if b {
-		Log = newConsoleLog()
+		log = newConsoleLog()
+	} else {
+		log = newFileLogger(fileName, filePath)
 	}
-	Log = newFileLogger(fileName, filePath)
 }
 
 func (l *Logger) SetConsole(b bool) {
@@ -45,7 +45,7 @@ func Warn(format string, args ...interface{}) {
 }
 
 func Error(format string, args ...interface{}) {
-	log.Warn(format, args...)
+	log.Error(format, args...)
 }
 
 func Fatal(format string, args ...interface{}) {
