@@ -10,7 +10,7 @@ type consoleLog struct {
 	logMsg *logMsg
 }
 
-func newConsoleLog() *consoleLog {
+func newConsoleLog() LoggerImpl {
 	obj := &consoleLog{}
 	obj.Init()
 	return obj
@@ -21,7 +21,10 @@ func (c *consoleLog) Init() {
 }
 
 func (c *consoleLog) SetLevel(level LOGGERLEVELTYPE) {
-
+	if c.level > level || c.level < level {
+		c.level = DEBUG
+	}
+	c.level = level
 }
 
 func (c *consoleLog) Write(level LOGGERLEVELTYPE, format string, args ...interface{}) {

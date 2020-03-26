@@ -3,29 +3,41 @@ package logger
 var (
 	log          LoggerImpl
 	DEFAULTLEVEL LOGGERLEVELTYPE = 0
-	LOG_FILE_MAX int64           = 10
+	log_file_max int64           = 100
 )
 
 type Logger struct {
-	console  bool
-	file     bool
-	defaults bool
+	Defaults  bool
+	LoggerMax int64
+
+	FileName string
+	FilePath string
 }
 
-func NewLogger(fileName, filePath string, b bool) {
-	if b {
+func NewLogger() *Logger {
+	return new(Logger)
+
+}
+
+// 默认配置
+func DefaultLogger() {
+	log = newConsoleLog()
+}
+
+func CustomLogger(logger *Logger) {
+	if logger.Defaults {
 		log = newConsoleLog()
 	} else {
-		log = newFileLogger(fileName, filePath)
+		log = newFileLogger(logger.FileName, logger.FilePath, logger.LoggerMax)
 	}
 }
 
-func (l *Logger) SetConsole(b bool) {
-	l.console = b
+func (l *Logger) SetLoggerMax(loggerMax int64) {
+	l.LoggerMax = loggerMax
 }
 
-func (l *Logger) SetFile(b bool) {
-	l.file = b
+func (l *Logger) SetConsole(b bool) {
+	l.Defaults = b
 }
 
 func Debug(format string, args ...interface{}) {

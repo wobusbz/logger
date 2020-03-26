@@ -9,7 +9,7 @@ import (
 )
 
 type fileLogger struct {
-	Level LOGGERLEVELTYPE
+	level LOGGERLEVELTYPE
 
 	filePath string
 	fileName string
@@ -22,11 +22,11 @@ type fileLogger struct {
 	logMsg     *logMsg
 }
 
-func newFileLogger(fileName, filePath string) *fileLogger {
+func newFileLogger(fileName, filePath string, loggerMax int64) LoggerImpl {
 	obj := new(fileLogger)
 	obj.fileName = fileName
 	obj.filePath = path.Join(filePath, time.Now().Format("20060102"))
-	obj.fileSize = LOG_FILE_MAX * 1024
+	obj.fileSize = loggerMax * 1024
 	obj.logChanMsg = make(chan *logMsg, 10000)
 	obj.logMsg = newLogMsg()
 	obj.Init()
@@ -82,6 +82,7 @@ func (f *fileLogger) isCheckSize(file *os.File) bool {
 		logs.Fatalf("isCheckSize: %s", err)
 		return false
 	}
+	fmt.Println(fileInfo.Size(), f.fileSize)
 	return fileInfo.Size() >= f.fileSize
 }
 
@@ -138,7 +139,10 @@ func (f *fileLogger) Init() {
 }
 
 func (f *fileLogger) SetLevel(level LOGGERLEVELTYPE) {
-
+	if f.level > level || f.level < level {
+		f.level = DEBUG
+	}
+	f.level = level
 }
 
 func (f *fileLogger) Write(level LOGGERLEVELTYPE, format string, args ...interface{}) {
