@@ -1,7 +1,9 @@
 package logger
 
+import "log"
+
 var (
-	log          LoggerImpl
+	Log          LoggerImpl
 	DEFAULTLEVEL LOGGERLEVELTYPE = 0
 )
 
@@ -13,9 +15,9 @@ type Logger struct {
 
 func NewLogger(fileName, filePath string, b bool) {
 	if b {
-		log = newConsoleLog()
+		Log = newConsoleLog()
 	}
-	log = newFileLogger(fileName, filePath)
+	Log = newFileLogger(fileName, filePath)
 }
 
 func (l *Logger) SetConsole(b bool) {
